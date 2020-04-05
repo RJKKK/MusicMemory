@@ -1,5 +1,5 @@
-const express = require('_express@4.16.4@express');
-({user} = require('../../api'))
+const express = require('express');
+import {user} from '../../api'
 let router = express.Router();
 //用户登录接口
 router.post('/user/login',(req,res)=>{

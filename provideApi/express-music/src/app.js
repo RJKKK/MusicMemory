@@ -4,10 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 const multer = require("multer");
 var logger = require('morgan');
-var indexRouter = require('./routes/index');
+var indexRouter = require('./routes');
 var usersRouter = require('./routes/users');
-({session} = require('./config/session.js'));
-({adminRouter,userRouter} = require('./routers/index.js'));
+// var session = require('./config/session.js');
+import {session} from './config/session.js'
+import {adminRouter,userRouter} from './routers';
 
 var app = express();
 app.use(session);
