@@ -99,7 +99,7 @@
             </Form>
             <div class="demo-drawer-footer">
                 <Button style="margin-right: 8px" @click="editSwitch = false">取消</Button>
-                <Button type="primary" @click="">提交</Button>
+                <Button type="primary" @click="editClient">提交</Button>
             </div>
         </Drawer>
         <Modal
@@ -210,37 +210,38 @@
                     account:'',
                     name: '',
                     password: '',
-                    email:''
+                    email:'',
+                    logoId:''
                 },
                 //编辑用户表单框数据
                 editForm: {
                     account:'',
                     name: '',
                     password: '',
-                    email:''
+                    email:'',
+                    logoId:''
                 },
                 visible: false,
             }
         },
         mounted(){
-            // admin.getAllUsr((res)=>{
-            //     console.log(res)
-            //     if(res&&res.status===200) this.usrInfo=res.data;
-            //     else {
-            //         console.log("数据获取失败!")
-            //     }
-            // });
                 this.getClientsList(10,1)
             },
         methods:{
             async getClientsList(pageSize,index){
                 this.usrInfo = await admin.getClients(pageSize,index)
             },
-           async addUsers(){
+            async addUsers(){
               let res = await admin.addclient(this.addForm)
                if(res==="ok") this.getClientsList(10,1)
                else this.$Notice.error({title: '通知', desc: '添加出错！. '});
                 this.addSwitch=false;
+            },
+            async editClient(){
+                let res = await admin.editclient(this.editForm)
+                if(res==="ok") this.getClientsList(10,1)
+                else this.$Notice.error({title: '通知', desc: '修改出错！. '});
+                this.editSwitch=false;
             },
             beforeupload(data){
                 let reader = new FileReader()

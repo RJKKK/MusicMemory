@@ -14,7 +14,7 @@
 <script>
     import Vue from 'vue';
     import { Button } from 'vant';
-    // import course from '@/data/musicInterval.js'
+    // import course from '@/data/pitchInterval.js'
     import ChargeInterval from './charge.js'
     let test = new ChargeInterval();
     import { Icon } from 'vant';

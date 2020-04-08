@@ -1,12 +1,18 @@
 const user = {
     state: {
-        user: null,
-        account:null
+        name: undefined,
+        account:undefined,
+        email:undefined,
+        logoId:undefined,
+
     },
     mutations: {
         //set user
         SET_USER: (state, user) => {
-            state.user = user;
+            // state.user = user;
+            for(let key in state){
+                state[key] = user[key]
+            }
         }
     },
     actions: {

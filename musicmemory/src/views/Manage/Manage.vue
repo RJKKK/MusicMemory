@@ -33,35 +33,18 @@
                   <Submenu name="1">
                      <template slot="title">
                         <Icon type="ios-navigate"></Icon>
-                        管理
+                        管理列表
                      </template>
                      <MenuItem name="1-1" replace to="/main/usr">用户管理</MenuItem>
                      <MenuItem name="1-2" replace to="/main/articles">文章管理</MenuItem>
-                     <MenuItem name="1-3" replace to="/main/course">课程管理</MenuItem>
-                  </Submenu>
-                  <Submenu name="2">
-                     <template slot="title">
-                        <Icon type="ios-keypad"></Icon>
-                        简谱管理
-                     </template>
-                     <MenuItem name="2-1">Option 1</MenuItem>
-                     <MenuItem name="2-2">Option 2</MenuItem>
-                  </Submenu>
-                  <Submenu name="3">
-                     <template slot="title">
-                        <Icon type="ios-analytics"></Icon>
-                        Item 3
-                     </template>
-                     <MenuItem name="3-1">Option 1</MenuItem>
-                     <MenuItem name="3-2">Option 2</MenuItem>
+                     <MenuItem name="1-3" replace to="/main/score">课程管理</MenuItem>
                   </Submenu>
                </Menu>
             </Sider>
             <Layout :style="{padding: '0 24px 24px'}">
                <Breadcrumb :style="{margin: '24px 0'}">
-                  <BreadcrumbItem>Home</BreadcrumbItem>
-                  <BreadcrumbItem>Components</BreadcrumbItem>
-                  <BreadcrumbItem>Layout</BreadcrumbItem>
+                  <BreadcrumbItem>管理列表</BreadcrumbItem>
+                  <BreadcrumbItem v-if="this.$route.matched[1]">{{this.meunItem1}}</BreadcrumbItem>
                </Breadcrumb>
                <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
                   <router-view></router-view>
@@ -79,9 +62,18 @@
         data() {
             return {
                 activeIndex: '1',
-                activeIndex2: '1'
-            };
+                activeIndex2: '1',
+                muenItems:[{name:'/main/usr',text:'用户管理'},{name:'/main/articles',text:'文章管理'},{name:'/main/score',text:'乐谱管理'}]
+            }
         },
+       mounted(){
+           console.log( this.$route)
+       },
+       computed:{
+           meunItem1(){
+              return this.muenItems.find((val)=>val.name===this.$route.path)['text']
+           }
+       },
         methods: {
            quit(){
               // console.log(1111)

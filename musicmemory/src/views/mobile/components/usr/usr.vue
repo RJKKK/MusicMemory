@@ -24,6 +24,13 @@
             </div>
         </div>
     </div>
+    <div class="usr_meunItem">
+        <van-cell-group>
+            <van-cell title="学习情况" value="" label=" " size="large"/>
+            <van-cell title="联系作者" value="" label=" " size="large"/>
+            <van-cell title="退出登录" value="" label=" " @click="logOut" size="large"/>
+        </van-cell-group>
+    </div>
 </div>
 </template>
 
@@ -31,12 +38,21 @@
     import Vue from 'vue';
     import { Image } from 'vant';
     import myNavBar from '@/views/mobile/components/common/NavBar';
-
+    import { Cell, CellGroup } from 'vant';
+    import {user} from '@/api'
+    Vue.use(Cell);
+    Vue.use(CellGroup);
     Vue.use(Image);
     export default {
         name: "usr",
         components:{
             myNavBar
+        },
+        methods:{
+            async logOut(){
+                let res=  await user.userLogOut()
+                console.log(res)
+            }
         }
     }
 </script>
@@ -84,14 +100,14 @@
                     border-bottom:#EFEFEF 1px solid;
                 }
             }
-            .usr_names:after{
-                display: block;
-                content: '>';
-                position: absolute;
-                right: 1.5rem;
-                top:50%;
-                color: #AAAAAA;
-            }
+            /*.usr_names:after{*/
+            /*    display: block;*/
+            /*    content: '>';*/
+            /*    position: absolute;*/
+            /*    right: 1.5rem;*/
+            /*    top:50%;*/
+            /*    color: #AAAAAA;*/
+            /*}*/
             .usr_days{
                 padding-right: 1rem;
                 overflow: hidden;
@@ -113,6 +129,16 @@
                 }
             }
         }
+
+    }
+    .usr_meunItem{
+        margin-top: 4vh;
+        display: flex;
+        flex-direction: column;
+        min-height: 60vh;
+        /*align-items: center;*/
+        justify-content: space-between;
+
     }
 }
 </style>

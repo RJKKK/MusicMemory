@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-
+import {user} from '@/api'
 const routes = [
     { path: '/',redirect:'main'},
     { path:'/login',component:()=>import ('./mobile_login')},
@@ -26,13 +26,14 @@ var router = new VueRouter({
     routes: routes,
     // mode: 'history'
 })
-router.beforeEach((to,from,next)=>{
-    // if((/\/.*/).test(to.path)===true) {
-    //     console.log((/\/.*/).test(to.path)===true)
-    //    next('/login')
-    //
-    // }
-    next()
+router.beforeEach( async (to,from,next)=>{
+    if((/main/).test(to.path)===true) {
+        let result = await user.isLogin()
+        if(result.data!=='ok')
+         next({path:'/login'})
+        else next()
+    }
+    else next()
 })
 
 

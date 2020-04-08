@@ -1,7 +1,7 @@
 <template>
-<div>
+<div id="container">
     <img
-        style="width: 100%"
+        style="width: 100%;display: block"
             src="@/assets/imgs/logo.png"
     />
     <van-cell-group>
@@ -32,7 +32,7 @@
     <van-button round type="primary" style="
     width: 50%;
     display: block;
-    margin: 0 auto 3% auto;
+    margin: 0 auto;
 " size="normal" plain @click="login" >登录</van-button>
     <van-button round type="primary" style="
     width: 50%;
@@ -43,11 +43,11 @@
 </template>
 
 <script>
-    import {login_user} from '@/api'
+    import {user} from '@/api'
     import { Field } from 'vant';
     import { CellGroup } from 'vant';
-    import { Button } from 'vant';;
-
+    import { Button } from 'vant';
+    import store from "@/store";
     export default {
         name: "mobile_login",
         data(){
@@ -63,13 +63,20 @@
         },
         methods:{
             async login(){
-               let result =  await login_user.userLogin({account:this.account,password: this.password})
-                console.log(result)
+               let res =  await user.userLogin({account:this.account,password: this.password})
+               console.log(res)
             },
         }
     }
 </script>
 
 <style scoped>
-
+    #container{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        justify-items: center;
+        flex-direction: column;
+    }
 </style>

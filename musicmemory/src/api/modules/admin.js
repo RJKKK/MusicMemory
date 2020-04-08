@@ -12,7 +12,7 @@ export default {
     },//生成实时时间
 
     async loginAdmin(ID,pwd){
-        let res = await post('/admin/login', {"account":ID, "pwd":pwd})
+        let res = await post('/admin/login', {"account":ID, "password":pwd})
         return res.data
     },
     async getClients(pageSize,index){
@@ -25,6 +25,10 @@ export default {
     },
     async delclient(formObj){
         let res = await post('/admin/delClient',formObj)
+        return  res.data
+    },
+    async editclient(formObj){
+        let res = await post('/admin/updateclient',formObj)
         return  res.data
     },
 }
