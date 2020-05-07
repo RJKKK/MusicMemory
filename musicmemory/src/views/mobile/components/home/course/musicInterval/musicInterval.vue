@@ -6,7 +6,7 @@
     </div>
     <div class="button_group">
         <van-button round type="info" tag="div" id="pass" @click="right">我听懂了</van-button>
-        <van-button round type="info" tag="div" id="fail">完全没搞懂</van-button>
+        <van-button round type="info" tag="div" id="fail" @click="error">完全没搞懂</van-button>
     </div>
 </div>
 </template>
@@ -16,7 +16,6 @@
     import { Button } from 'vant';
     // import course from '@/data/pitchInterval.js'
     import ChargeInterval from './charge.js'
-    let test = new ChargeInterval();
     import { Icon } from 'vant';
 
     Vue.use(Icon);
@@ -24,21 +23,29 @@
     export default {
         name: "musicInterval",
         mounted() {
-            let urls =  test.prePlay()
+            this.charger = new ChargeInterval();
+            let urls =  this.charger.prePlay()
             this.playData = urls
 
         },
         data(){
             return{
-                playData:''
+                playData:'',
+                charger:null
             }
         },
         methods:{
             soundPlay(){
-                test.play(this.playData.url1,this.playData.url2)
+                this.charger.play(this.playData.url1,this.playData.url2)
             },
             right(){
-               let urls = test.prePlay()
+                console.log(this.charger.correctChange(this.playData.distance))
+                let urls = this.charger.prePlay()
+                this.playData = urls
+            },
+            error(){
+                console.log(this.charger.errorChange(this.playData.distance))
+                let urls = this.charger.prePlay()
                 this.playData = urls
             }
         }

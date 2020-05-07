@@ -1,6 +1,7 @@
 import axios from 'axios'
+import {apiUrl} from "@/config";
 let instance = axios.create({
-    baseURL:'/api',
+    baseURL:apiUrl,
     timeout:5000
 })
 let obj = {

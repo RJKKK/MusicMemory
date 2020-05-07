@@ -17,6 +17,7 @@
     "iview": "^1.0.1",
     "jquery": "^3.4.1",
     "js-cookie": "^2.2.1",
+    "localstorage": "^1.0.1",
     "opensheetmusicdisplay": "^0.7.3",
     "p5": "^0.10.2",
     "p5-sketch-module": "^1.0.0",

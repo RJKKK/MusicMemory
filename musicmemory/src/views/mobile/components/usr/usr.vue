@@ -14,8 +14,8 @@
         </router-link>
         <div class="usr_info">
             <router-link class="usr_names" tag="div" to="">
-                <p>beating</p>
-                <p>ID:114514</p>
+                <p>{{getUserDetails.name}}</p>
+                <p>{{getUserDetails.account}}</p>
             </router-link>
             <div class="usr_days">
                 <span class="fa fa-calendar"> &nbsp;&nbsp;打卡</span>
@@ -40,6 +40,7 @@
     import myNavBar from '@/views/mobile/components/common/NavBar';
     import { Cell, CellGroup } from 'vant';
     import {user} from '@/api'
+    import {userDetails} from '@/Cookies'
     Vue.use(Cell);
     Vue.use(CellGroup);
     Vue.use(Image);
@@ -52,7 +53,20 @@
             async logOut(){
                 let res=  await user.userLogOut()
                 console.log(res)
+            },
+            async getPitch(){
+                let res = await user.getPitchInterval('test')
+                console.log(res)
             }
+        },
+        computed:{
+            getUserDetails(){
+                return userDetails.get()
+            }
+        },
+         mounted() {
+            this.getPitch()
+            console.log(this.$store)
         }
     }
 </script>

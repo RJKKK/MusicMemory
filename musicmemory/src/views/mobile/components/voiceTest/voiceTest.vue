@@ -26,7 +26,7 @@
     import "p5/lib/addons/p5.sound";
     import abcjs from "abcjs";
     import 'abcjs/abcjs-audio.css';
-    import {PITCH_DATA,RANGE_DATA,Locale} from './DEFAULT_DATA.js'
+    import {PITCH_DATA,RANGE_DATA,Locale} from '../../../../data/DEFAULT_DATA.js'
     import Top from './Top.js'
     import EqualLoud from './EqualLoud.js'
     function getPitch(freq) {
@@ -299,7 +299,7 @@
 
         methods: {
             setupCanvas(s) {
-                s.createCanvas(0, 0);
+                s.createCanvas(100, 100);
                 if (!window.AudioContext) {
                     window.alert(Locale.get('no_support'));
                 }
@@ -323,6 +323,7 @@
             },
             start() {
                 if (!this.myp5) {
+                    console.log(123)
                     this.myp5 = new p5(this.script, "canvas");
                 }
                 this.context.resume();

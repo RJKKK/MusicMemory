@@ -47,7 +47,6 @@
     import { Field } from 'vant';
     import { CellGroup } from 'vant';
     import { Button } from 'vant';
-    import store from "@/store";
     export default {
         name: "mobile_login",
         data(){
@@ -64,6 +63,10 @@
         methods:{
             async login(){
                let res =  await user.userLogin({account:this.account,password: this.password})
+                if(res.data.result==='ok') {
+                    this.$store.commit('SET_USER', res.data.msg)
+                    this.$router.replace('/main')
+                }
                console.log(res)
             },
         }

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import {userDetails} from '@/Cookies'
 Vue.use(VueRouter)
 import {user} from '@/api'
 const routes = [
@@ -29,8 +29,10 @@ var router = new VueRouter({
 router.beforeEach( async (to,from,next)=>{
     if((/main/).test(to.path)===true) {
         let result = await user.isLogin()
-        if(result.data!=='ok')
-         next({path:'/login'})
+        if(result.data.msg!==0||!userDetails.get()){
+            next({path:'/login'})
+        }
+
         else next()
     }
     else next()

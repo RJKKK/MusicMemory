@@ -28,7 +28,7 @@
             myNavBar, keyboard,player
         },
         beforeMount() {
-            this.playList = ["X:1\nK:D\nDDAA|BBA2|\n"]
+            this.playList = ["X:1\nK:D\nDD_AA|BBA2|\n"]
         },
         mounted() {
 
