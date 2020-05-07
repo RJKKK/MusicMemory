@@ -1,4 +1,5 @@
 ({DAO} = require('../../database'));
+({UserDetails} = require('../../database'));
 const myfunctions = require('../../commonFunction');
 const admin = new DAO('mongodb://localhost:27017/','MusicMemory','admin');
 const clients = new DAO('mongodb://localhost:27017/','MusicMemory','clients');
@@ -39,14 +40,24 @@ module.exports = {
 						Date: date,
 						logoId:req.body.logoId||''
 					});
-					result?res.send('ok'):res.send('datebaseError')
+					if(result){
+						let clientDetail = new UserDetails(req.body.account)
+						let setupResult = await clientDetail.setup();
+						setupResult?res.send('ok'):res.send('datebaseError');
+					}
+					else res.send('datebaseError')
+					// result?res.send('ok'):res.send('datebaseError')
 				}
-			else  res.send('fail');
+			else  {
+					res.send('fail');
+				}
 	},
 	//删除用户
 	async delclient(req,res){
-			let result = await clients.delete({account:req.body.account});
-			if(!result) res.send('fail');
+			let result_0 = await clients.delete({account:req.body.account});
+			let userdetail = new UserDetails(req.body.account)
+			let result_1 = await userdetail.delete();
+			if(!result_0||!result_1) res.send('fail');
 			else  res.send('ok')
 	},
 	//修改用户数据

@@ -17,15 +17,7 @@ router.post('/admin/getClients',validate({
     admin.getUsrList(req,res);
 });
 //管理系统增添用户接口
-router.post('/admin/addClient',validate({
-    body:Joi.object({
-        account:Joi.string().required(),
-        name:Joi.string(),
-        password:Joi.string().required(),
-        email:Joi.string().required(),
-        logoId:Joi.string()
-    })
-},{},{}),function(req,res){
+router.post('/admin/addClient',function(req,res){
     admin.addclient(req,res);
 })
 //管理系统删除用户接口
