@@ -30,7 +30,7 @@ module.exports = {
 	async addclient(req,res){
 				let result0 = await clients.query({$or:[{account:req.body.account},{email:req.body.email}]});
 				if(!result0[0]){
-					let name = req.body.name||"用户昵称未设置";
+					let name = req.body.name===''?"用户昵称未设置":req.body.name;
 					let date=myfunctions.getDate();
 					let result = await clients.insert({
 						account:req.body.account,

@@ -59,12 +59,12 @@ class DAO{
 		})
 		})
 	}
-	update(filter,updater){
+	update(filter,updater,upset=false){
 		return new Promise((resolve,reject)=>{
 			this._connect().then(client=>{
 				let updateCpy = {$set:updater};
 				let db = client.db(this.dbName);
-				db.collection(this.collectionName).updateMany(filter,updateCpy).then(res=>{
+				db.collection(this.collectionName).updateMany(filter,updateCpy,{upsert:upset}).then(res=>{
 					resolve(res);
 					client.close()
 				})

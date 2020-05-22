@@ -38,10 +38,15 @@ module.exports = {
         if (!req.session.user||req.session.user===null)res.send('fail')
         else res.json({detail:req.session.user,msg:0})
     },
-    async userPitchInterval(req,res){
+    async getUserPitchInterval(req,res){
         let params = url.parse(req.url, true).query;
         let userDetails = new UserDetails(params.account)
         let data = await userDetails.getPitchInterval()
+        res.json(data)
+    },
+    async setUserPitchInterval(req,res){
+        let userDetails = new UserDetails(req.body.account)
+        let data = await userDetails.setPitchInterval(req.body.pitchInterval)
         res.json(data)
 
     }
