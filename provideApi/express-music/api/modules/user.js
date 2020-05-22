@@ -1,9 +1,10 @@
 ({DAO} = require('../../database'));
+({UserDetails} = require('../../database'));
+const url = require('url');
 const user = new DAO('mongodb://localhost:27017/','MusicMemory','clients');
 module.exports = {
     async userLogin(req, res) {
         user.query({account: req.body.account, password: req.body.password}).then((arr => {
-            console.log(arr)
             if (arr[0]) {
                 var user = {account:arr[0]['account'],
                             name:arr[0]['name'],
@@ -35,6 +36,18 @@ module.exports = {
     },
     async isLogin(req,res){
         if (!req.session.user||req.session.user===null)res.send('fail')
-        else res.send('ok')
+        else res.json({detail:req.session.user,msg:0})
+    },
+    async getUserPitchInterval(req,res){
+        let params = url.parse(req.url, true).query;
+        let userDetails = new UserDetails(params.account)
+        let data = await userDetails.getPitchInterval()
+        res.json(data)
+    },
+    async setUserPitchInterval(req,res){
+        let userDetails = new UserDetails(req.body.account)
+        let data = await userDetails.setPitchInterval(req.body.pitchInterval)
+        res.json(data)
+
     }
 }
