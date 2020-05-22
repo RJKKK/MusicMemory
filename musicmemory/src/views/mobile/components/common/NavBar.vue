@@ -4,6 +4,8 @@
             :title="myTitle"
             :left-arrow="arrow"
             @click-left="onClickLeft"
+            :fixed="this.isFixed"
+            class="bar"
     />
 
 </template>
@@ -15,8 +17,8 @@
 
     Vue.use(NavBar);
     export default {
-        name: "NavBar",
-        props: ["myTitle","arrow"],
+        name: "myNavBar",
+        props: ["myTitle","arrow","isFixed"],
         methods: {
             onClickLeft() {
                 this.$router.go(-1)

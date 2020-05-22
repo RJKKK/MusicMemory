@@ -82,7 +82,7 @@
             right: 0;
             top:0;
            background: rgba(0,0,0,0);
-            z-index: 100;
+            z-index: 50;
             width: 3rem;
 
         }
@@ -108,7 +108,7 @@
             text-align: center;
         }
     }
-    .van-dropdown-menu__title::after{
-        content: unset;
-    }
+    /*.van-dropdown-menu__title::after{*/
+    /*    content: unset;*/
+    /*}*/
 </style>

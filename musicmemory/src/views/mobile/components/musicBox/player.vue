@@ -53,6 +53,8 @@
     import { Slider } from 'vant';
     import 'abcjs/abcjs-audio.css';
     import Abcjs from 'abcjs';
+    import 'xml2abc/xml2abc.nomin.js'
+    // vertaal()
     Vue.use(Slider);
     Vue.use(Tab).use(Tabs);
     Vue.use(Grid).use(GridItem);
@@ -72,19 +74,20 @@
                     ismixing: true,
                     isloop:false,
                     chooseType:2,
-                    bpm:83,
+                    bpm:53,
                 },
                 myList:[]
             };
         },
         mounted() {
-
             Vue.nextTick(() => {
                 this.updateList()
                 this.synthControl = new Abcjs.synth.SynthController();
                 this.synthControl.load(this.$refs.audio,{
                     onFinished:()=>this.boxPlay.isPause = true,
-                }, {displayLoop: false, displayRestart: false, displayPlay: false, displayProgress: false, displayWarp: false});
+                }, {displayLoop: false, displayRestart: false, displayPlay: false, displayProgress: false, displayWarp: false,
+                    bpm:this.bpm
+                });
                 this.setupList()
             });
         },
@@ -113,6 +116,7 @@
             play(){
                 if(this.boxPlay.isPause&&!this.synthControl.isStarted){
                     this.boxPlay.isPause=false;
+                    this.boxPlay.isPlay = true
                     this.synthControl.play()
                 }
                 else{

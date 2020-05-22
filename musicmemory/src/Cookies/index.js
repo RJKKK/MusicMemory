@@ -1,4 +1,5 @@
 import userDetails from "./userDetails";
 import userMsg from './userMsg'
-import pitchIntervalDetails from "./pitchIntervalDetails";
-export {userDetails,pitchIntervalDetails,userMsg}
+import comparePitch from "./comparePitch";
+import articles from './articlesRead'
+export {userDetails,comparePitch,userMsg,articles}

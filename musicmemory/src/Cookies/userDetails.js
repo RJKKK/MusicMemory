@@ -12,6 +12,14 @@ let userDetails = {
         pitchIntervalDetails.del(obj.account)
         userList.unshift(obj);
      }
+
+       else  userList.forEach((val,index)=>{
+             if(val.account===obj.account){
+                 userList.splice(index, 1);
+                 userList.unshift(obj);
+                 return true
+             }
+         })
     return cookies.set('userDetail',userList,time||cookiesFunctions.getTimeAtDay())
 },
     isCleanLocalStorage(account){

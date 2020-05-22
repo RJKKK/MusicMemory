@@ -4,11 +4,15 @@ Vue.use(VueRouter)
 
 const routes = [
     { path: '/', redirect:'main' },
-    {path:'/login',component:()=> import('./login/login.vue') },
+    {path:'/login',component:()=> import('./login/Manage_login.vue') },
     {path:'/main',component:()=>import('./Manage.vue'),children:[
             { path: '/', redirect:'usr' },
             { path: 'usr', name:'usr', component: () => import('./chargeUsr/users.vue'), meta: { title: 'console 登录' }},
-            { path: 'articles',  },
+            { path: 'articles', component:()=>import('./articles/articles.vue'),children:[
+                    { path: '/', redirect:'list' },
+                    {path:'list',component:()=>import('./articles/articlesList.vue')},
+                    {path:'content/:articleId',component:()=>import('./articles/editor.vue')}
+                ]},
             { path: 'score', },
         ]},
 
