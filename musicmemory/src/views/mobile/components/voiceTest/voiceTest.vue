@@ -1,22 +1,25 @@
 <template>
-    <div>
-<!--        切换男女生源按钮-->
+    <div class="main">
+        <my-Nav-Bar myTitle="测试音高"  :isFixed="true" ></my-Nav-Bar>
+        <!--        切换男女生源按钮-->
         <div style="position: relative;margin-top:2vh" class="clearFloat">
             <div class="genderSelected" style="position: absolute;right: 0px;margin-right: 1ch">
-            <span class="fa fa-venus" aria-hidden="true" style="color:#ffb0f2;font-size:30px"></span>
-            <van-switch v-model="gender" active-color="#a3d0ef" inactive-color="#ffb0f2" style="float: left;margin:0 .3rem" />
-            <span class="fa fa-mars" aria-hidden="true" style="color:#a3d0ef;font-size:30px"></span>
-             </div>
+                <span class="fa fa-venus" aria-hidden="true" style="color:#ffb0f2;font-size:30px"></span>
+                <van-switch v-model="gender" active-color="#a3d0ef" inactive-color="#ffb0f2" style="float: left;margin:0 .3rem" />
+                <span class="fa fa-mars" aria-hidden="true" style="color:#a3d0ef;font-size:30px"></span>
+            </div>
         </div>
-        <div class="page_main" style="position: relative;padding-top:4vh">
-            <span class="">{{this.pitchText}}</span>
+        <div class="page_main" style="position: relative;padding:8vh 0">
+            <p  style="position: relative;padding-top:2vh;text-align: center">系统测得您的发声音高为:</p>
+            <p v-if="this.pitchText" class="pithShow" >{{this.gender?this.pitchText.man_voice:this.pitchText.woman_voice}}</p>
+            <p v-else class="pithShow" >未发声</p>
         </div>
-<!--        <span style="line-height: 30px">声源设置</span>-->
-        <button @touchstart="start" @touchend="stop">Start</button>
-        <button @click="stop">Stop</button>
-
-
+        <!--        <span style="line-height: 30px">声源设置</span>-->
         <div id="paper" ></div>
+        <div @touchstart="start" @touchend="stop" class="voiceBtn">
+            开始
+        </div>
+
         <div id="canvas"></div>
     </div>
 </template>
@@ -26,7 +29,8 @@
     import "p5/lib/addons/p5.sound";
     import abcjs from "abcjs";
     import 'abcjs/abcjs-audio.css';
-    import {PITCH_DATA,RANGE_DATA,Locale} from './DEFAULT_DATA.js'
+    import {PITCH_DATA,RANGE_DATA,Locale} from '@/data'
+    import myNavBar from '@/views/mobile/components/common/NavBar';
     import Top from './Top.js'
     import EqualLoud from './EqualLoud.js'
     function getPitch(freq) {
@@ -37,7 +41,7 @@
         var currentElement;
         if (freq > PITCH_DATA[maxIndex].value)
             return PITCH_DATA[maxIndex];
-            // return maxIndex
+        // return maxIndex
 
         while (minIndex <= maxIndex) {
             currentIndex = (minIndex + maxIndex) / 2 | 0;
@@ -50,14 +54,8 @@
             } else {
                 if (currentIndex > 0 && Math.abs(PITCH_DATA[currentIndex].value - freq) >
                     Math.abs(PITCH_DATA[currentIndex - 1].value - freq)) {
-                    // console.log(PITCH_DATA[currentIndex - 1]);
-                    // console.log(currentIndex-1)
-                    // return(currentIndex-1)
                     return PITCH_DATA[currentIndex - 1];
-                    // return currentIndex-1;
                 }
-                // console.log(currentElement)
-                // return(currentIndex)
                 return currentElement;
             }
         }
@@ -80,6 +78,80 @@
         }
         return range;
     }
+    var data = {
+        mic: null,
+        audio: null,
+        fft: null,
+        spectrum: null,
+        tops: null,
+        pitch:null,
+        input_pane: true,
+        show_spec: true,
+        show_vspec: true,
+        show_piano: true,
+        show_pitch_on_spec: false,
+        use_mic: true,
+        no_mic: false,
+        debug: false,
+
+        sample_rate: 44100,
+        fft_size: 1024,
+        max_db: 140,
+
+        lock_spec: false,
+
+        width: 800,
+        padding_right: 50,
+        x_max: 1000,
+        avg_spec: 0,
+        min_eng: 60,
+        max_eng: 140,
+        eng_delta: 20,
+        image_scale: 1,
+        fft_scale: 2,
+        smooth: 0.01,
+        fps: 5,
+
+        overtone_count: 5,
+        overtone_accept_count: 3,
+        overtone_accept_percent: 0.99,
+        mix_overtone: false,
+        top_eng_range_rate: 0.03,
+        fake_top_rate: 4,
+
+        pitch_name: 'inter',
+        range_name: 'man_high',
+
+        getTop: function(left, right) {
+            var max_eng = 0;
+            var max_top = null;
+            left = Math.floor(left);
+            right = Math.ceil(right);
+            for (var i = left; i <= right; ++i) {
+                var top = this.tops[i];
+                if (top && top.eng > max_eng) {
+                    max_eng = top.eng;
+                    max_top = top;
+                }
+            }
+            return max_top;
+        },
+
+        init: function() {
+            if (!window.navigator.getUserMedia) {
+                this.no_mic = true;
+            }
+
+            var is_safari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
+
+            if (!is_safari) {
+                this.fft_size = 2048;
+                this.fft_scale = 1;
+            }
+            this.line_value /= this.fft_size / 1024 * this.fft_scale;
+
+        },
+    };
     var top_model = {
         getValue: function() {
             data.tops = new Array(data.fft_size);
@@ -197,85 +269,11 @@
                 }
 
                 if (max_top) {
-                    var freq = max_top.axios_extend * data.sample_rate / 2 / data.fft_size;
+                    var freq = max_top.index * data.sample_rate / 2 / data.fft_size;
                     data.pitch = getPitch(freq);
                     data.max_top = max_top;
                 }
             }
-        },
-    };
-    var data = {
-        mic: null,
-        audio: null,
-        fft: null,
-        spectrum: null,
-        tops: null,
-        pitch:null,
-        input_pane: true,
-        show_spec: true,
-        show_vspec: true,
-        show_piano: true,
-        show_pitch_on_spec: false,
-        use_mic: true,
-        no_mic: false,
-        debug: false,
-
-        sample_rate: 44100,
-        fft_size: 1024,
-        max_db: 140,
-
-        lock_spec: false,
-
-        width: 800,
-        padding_right: 50,
-        x_max: 1000,
-        avg_spec: 0,
-        min_eng: 60,
-        max_eng: 140,
-        eng_delta: 20,
-        image_scale: 1,
-        fft_scale: 2,
-        smooth: 0.01,
-        fps: 5,
-
-        overtone_count: 5,
-        overtone_accept_count: 3,
-        overtone_accept_percent: 0.99,
-        mix_overtone: false,
-        top_eng_range_rate: 0.03,
-        fake_top_rate: 4,
-
-        pitch_name: 'inter',
-        range_name: 'man_high',
-
-        getTop: function(left, right) {
-            var max_eng = 0;
-            var max_top = null;
-            left = Math.floor(left);
-            right = Math.ceil(right);
-            for (var i = left; i <= right; ++i) {
-                var top = this.tops[i];
-                if (top && top.eng > max_eng) {
-                    max_eng = top.eng;
-                    max_top = top;
-                }
-            }
-            return max_top;
-        },
-
-        init: function() {
-            if (!window.navigator.getUserMedia) {
-                this.no_mic = true;
-            }
-
-            var is_safari = /Safari/.test(navigator.userAgent) && /Apple Computer/.test(navigator.vendor);
-
-            if (!is_safari) {
-                this.fft_size = 2048;
-                this.fft_scale = 1;
-            }
-            this.line_value /= this.fft_size / 1024 * this.fft_scale;
-
         },
     };
     import Vue from 'vue';
@@ -293,10 +291,12 @@
                 usrData:{},
                 script:null,
                 editor:null,
-                visalPitch:''
+                visalPitch:'',
             };
         },
-
+        components:{
+            myNavBar,
+        },
         methods: {
             setupCanvas(s) {
                 s.createCanvas(0, 0);
@@ -333,7 +333,6 @@
             }
         },
         mounted(){
-
             const vm = this;
             this.script = function(s) {
                 s.setup = () => {
@@ -349,25 +348,55 @@
             'voiceData.pitch':{
                 deep:true,
                 handler(ndata,odata){
-                   this.prePitch=ndata===null?odata:ndata;
-                   if(this.prePitch!==null){
-                       abcjs.renderAbc("paper", "X: 1\nM:4/4\n|:"+this.gender?this.prePitch.man:this.prePitch.woman);
-                   }
+                    this.prePitch=ndata===null?odata:ndata;
+                    if(this.prePitch!==null){
+                        let score = this.gender?this.prePitch.man:this.prePitch.woman
+                        abcjs.renderAbc("paper", "X: 1\nM:4/4\n|:"+score+score+score+score+score+score+score);
+                    }
                 }
             }
         },
         computed:{
             pitchText(){
                 return this.voiceData.pitch === null?this.prePitch:this.voiceData.pitch
-            }
+            },
         }
     };
 </script>
 <style lang="less">
-    .genderSelected{
-       >span {
-           display: block;
-           float: left;
-       }
-       }
+    .main{
+        height: 100%;
+        padding-top:46px;
+        .genderSelected{
+            >span {
+                /*display: block;*/
+                float: left;
+            }
+        }
+        .voiceBtn{
+            width: 7rem;
+            height: 7rem;
+            background: #27BD9F;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: white;
+            text-align: center;
+            line-height: 7rem;
+            position: absolute;
+            bottom: 12vh;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #paper{
+           position: absolute;
+            bottom: 30vh;
+            width: 100%;
+        }
+        .pithShow{
+            text-align: center;
+            margin-top: 3vh;
+            font-size: 2rem;
+        }
+    }
+
 </style>

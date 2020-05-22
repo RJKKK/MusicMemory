@@ -25,10 +25,10 @@
                 style="margin-bottom: 2%"
         />
     </van-cell-group>
-    <p style="text-align: right;
+    <router-link  to="/register" tag="p" style="text-align: right;
     padding-right: 5%;
     margin-bottom: 15%;
-">忘记密码？</p>
+">注册账号</router-link>
     <van-button round type="primary" style="
     width: 50%;
     display: block;
@@ -47,7 +47,6 @@
     import { Field } from 'vant';
     import { CellGroup } from 'vant';
     import { Button } from 'vant';
-    import store from "@/store";
     export default {
         name: "mobile_login",
         data(){
@@ -64,6 +63,22 @@
         methods:{
             async login(){
                let res =  await user.userLogin({account:this.account,password: this.password})
+                if(res.data.result==='ok') {
+                    this.$dialog.alert({
+                        title:'提示',
+                        message:'登录成功!'
+                    }).then(()=>{
+                        this.$router.replace('/main')
+                    })
+                }
+                else{
+                    this.$dialog.alert({
+                        title:'提示',
+                        message:res.data.msg
+                    }).then(()=>{
+                        this.$router.replace('/main')
+                    })
+                }
                console.log(res)
             },
         }

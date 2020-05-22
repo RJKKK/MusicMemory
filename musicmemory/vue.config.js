@@ -44,6 +44,8 @@ module.exports = {
             .set('components',resolve('src/components'))
             .set('imgs',resolve('src/assets/imgs'))
     },
+
+
     devServer: {
         proxy: {
             '/api': {
@@ -53,6 +55,15 @@ module.exports = {
                 ws: true,
                 pathRewrite: {
                     '^/api': ''
+                }
+            },
+            '/files-api': {
+                target: 'http://127.0.0.1:8765', //对应自己的接口
+                secure:false,
+                changeOrigin: true,
+                ws: true,
+                pathRewrite: {
+                    '^/files-api': ''
                 }
             }
         },

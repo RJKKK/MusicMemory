@@ -2,29 +2,26 @@
     <div id="home">
         <div class="date_detail">
             <!--获取数据 -->
-            <span>353</span>
+            <span>{{getClockInCount}}</span>
             <!--            -->
             &nbsp;&nbsp;<span>天</span>
-            <div>
+            <router-link :to="{path:'/main/panel'}" tag="div">
             <span class="fa fa-calendar-o "></span>&nbsp;&nbsp;&nbsp;
-                <span>打卡日历</span>&nbsp;&nbsp;
+                <span>打卡</span>&nbsp;&nbsp;
                 <span>&gt;</span>
-            </div>
+            </router-link>
         </div>
         <div class="course">
 <!--           轮播图课程选择器 记得在此替换图片-->
             <van-swipe  indicator-color="white" :touchable="true"  tag="div" class="choose" @change="onChoose">
                 <van-swipe-item >
-                    <img src="https://media-image1.baydn.com/storage_media_image/kvhfgj/3e41a7d6f1aa20a3890f6846e67ed3c5.2e5a6a8972bd08fd521e09099ec16eea.png?x-oss-process=image/format,jpg/quality,q_80" alt="">
+                    <img src="@/assets/imgs/courseImg/音程练习.png" alt="">
                 </van-swipe-item>
                 <van-swipe-item>
-                    <img src="https://static.baydn.com/media/media_store/image/feeee16e97407bbca8957702a674e421.png" alt="">
+                    <img src="@/assets/imgs/courseImg/音高判别.png" alt="">
                 </van-swipe-item>
                 <van-swipe-item>
-                    <img src="https://static.baydn.com/media/media_store/image/0121935e7513b1e001d04a39c62b6247.png" alt="">
-                </van-swipe-item>
-                <van-swipe-item>
-                    <img src="https://static.baydn.com/media/media_store/image/0121935e7513b1e001d04a39c62b6247.png" alt="">
+                    <img src="@/assets/imgs/courseImg/音高判别.png" alt="">
                 </van-swipe-item>
             </van-swipe>
         </div>
@@ -32,18 +29,24 @@
             <div id="title">
                 <p>- 学习情况 -</p>
             </div>
-            <div class="detail">
+            <div class="detail" v-if="current===0">
                 <div>
-                    <p>30</p>
-                    <p>非常熟悉</p>
+                    <p>{{getPitchIntervalDetailsData}}</p>
+                    <p>今日已完成</p>
                 </div>
                 <div>
-                    <p>10</p>
-                    <p>需要复习</p>
+                    <p>25</p>
+                    <p>今日目标训练量</p>
+                </div>
+            </div>
+            <div class="detail" v-if="current===1">
+                <div>
+                    <p>{{getComparePitch&&getComparePitch.correct||0}}</p>
+                    <p>今日已完成</p>
                 </div>
                 <div>
-                    <p>5</p>
-                    <p>比较陌生</p>
+                    <p>{{getComparePitch&&getComparePitch.len||0}}</p>
+                    <p>今日目标训练量</p>
                 </div>
             </div>
             <div class="btn">
@@ -59,22 +62,61 @@
     import Vue from 'vue';
     import { Swipe, SwipeItem } from 'vant';
     import { Button } from 'vant';
+    import {userDetails,comparePitch} from '@/Cookies'
+    import {pitchIntervalDetails} from '@/localStorage'
+    import {user} from '@/api'
+    import { Popup } from 'vant';
 
+    Vue.use(Popup);
     Vue.use(Button);
     Vue.use(Swipe).use(SwipeItem);
     export default {
         name: "home",
         mounted(){
-
+            this.getClockIn()
         },
         data() {
             return {
-                current: 0
+                current: 0,
+                popupShow:false,
+                clockInData:[],
+
             }
         },
         methods: {
             onChoose(index) {
                 this.current = index;
+            },
+            showPopup() {
+                this.popupShow = true;
+            },
+            async getClockIn(){
+                let res = await user.getClockInDetails(this.getUserDetails.account)
+                console.log(res)
+                this.clockInData = res
+            },
+        },
+
+        computed:{
+            getUserDetails(){
+                return userDetails.get()
+            },
+            getDateArr(){
+                return this.clockInData.map(val=>val.date)
+            },
+            getClockInCount(){
+                return this.clockInData.length
+            },
+            getComparePitch(){
+                return comparePitch.get(this.getUserDetails.account)
+            },
+            getPitchIntervalDetails(){
+                return pitchIntervalDetails.get(this.getUserDetails.account)
+            },
+            getPitchIntervalDetailsData(){
+                if(this.getPitchIntervalDetails.done===true)
+                    return 25
+                else return this.getPitchIntervalDetails['pitchInterval'].length?25-this.getPitchIntervalDetails['pitchInterval'].length:0
             }
         }
     }

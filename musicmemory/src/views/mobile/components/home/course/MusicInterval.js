@@ -8,7 +8,7 @@ class MusicInterval {
     }
 
     async createSound(url1,url2){
-       axios.post(url1,null,{responseType:'arraybuffer'}).then(res=>{
+       axios.get(url1,{responseType:'arraybuffer'}).then(res=>{
            this.audioCtx.decodeAudioData(res.data,(buffer)=>{
                    var bufferSource=this.audioCtx.createBufferSource();
                    bufferSource.buffer=buffer;
@@ -19,7 +19,7 @@ class MusicInterval {
                })
        });
         await sleep(1500);
-        axios.post(url2,null,{responseType:'arraybuffer'}).then(res=>{
+        axios.get(url2,{responseType:'arraybuffer'}).then(res=>{
             this.audioCtx.decodeAudioData(res.data,(buffer)=>{
                 var bufferSource=this.audioCtx.createBufferSource();
                 bufferSource.buffer=buffer;
@@ -38,6 +38,6 @@ function sleep(ms) {
     });
 }
 
-window.MusicBox = MusicInterval;
+window.MusicInterval = MusicInterval;
 
 export default MusicInterval;

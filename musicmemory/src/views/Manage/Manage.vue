@@ -63,15 +63,18 @@
             return {
                 activeIndex: '1',
                 activeIndex2: '1',
-                muenItems:[{name:'/main/usr',text:'用户管理'},{name:'/main/articles',text:'文章管理'},{name:'/main/score',text:'乐谱管理'}]
+                muenItems:[{name:'/main/usr',text:'用户管理'},
+                   {name:'/main/articles',text:'文章管理'},
+                   {name:'/main/score',text:'乐谱管理'},
+
+                ]
             }
         },
        mounted(){
-           console.log( this.$route)
        },
        computed:{
            meunItem1(){
-              return this.muenItems.find((val)=>val.name===this.$route.path)['text']
+              return this.muenItems.find((val)=>this.$route.path.indexOf(val.name)!==-1)['text']
            }
        },
         methods: {

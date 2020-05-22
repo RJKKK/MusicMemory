@@ -151,9 +151,6 @@
                                     domProps:{
                                         proxy:par.row.account
                                     },
-                                    // attrs:{
-                                    //     "actionid":
-                                    // },
                                     on:{
                                         click:(e)=>{
                                            let id= e.target.parentElement.proxy||e.target.proxy;
